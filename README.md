@@ -96,8 +96,5 @@ Page 1 (Splash) → Page 2 (Login) → Page 3 (Dashboard) → Page 4 (Sprint Boa
 - [x] Kanban board visualisation (To Do / In Progress / Done)
 - [x] Iterative workflow (tasks can be updated at any time)
 - [x] Definition of Done (status dropdown on Task Detail screen)
-- [x] About screen explains Scrum roles, Sprints, and Kanban
-
----
-
-*Built for a Final-Year Project demonstration. Flutter + VS Code.*
+- [x] About screen explains Scrum roles, Sprints, and Kanban.
+Agile software development lifecycle has five structured phases: Ideation, development, testing, deployment, and operations.
