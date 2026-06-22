@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ravitec HMIS</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-height: 95vh;
+    overflow-y: auto;
+}
+
+h1 {
+    color: #1a1a2e;
+    font-size: 24px;
+    border-bottom: 3px solid #0f3460;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h1 small {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+}
+
+.logo {
+    color: #0f3460;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #0f3460;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(15, 52, 96, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button.secondary {
+    background: #6c757d;
+}
+
+button.secondary:hover {
+    background: #5a6268;
+}
+
+button.danger {
+    background: #dc3545;
+}
+
+button.danger:hover {
+    background: #c82333;
+}
+
+button.success {
+    background: #28a745;
+}
+
+button.success:hover {
+    background: #218838;
+}
+
+button.warning {
+    background: #ffc107;
+    color: #333;
+}
+
+button.warning:hover {
+    background: #e0a800;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.card {
+    background: #f8f9fa;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border-left: 4px solid #0f3460;
+    transition: all 0.3s;
+}
+
+.card:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.card .title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #1a1a2e;
+}
+
+.card .subtitle {
+    color: #6c757d;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.nav-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.nav-grid button {
+    padding: 15px;
+    font-size: 14px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-group button {
+    flex: 1;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stat-card .number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #0f3460;
+}
+
+.stat-card .label {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+#list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.tabs {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.tabs button {
+    flex: 1;
+    padding: 8px;
+    background: transparent;
+    color: #333;
+    margin: 0;
+    font-size: 13px;
+}
+
+.tabs button.active {
+    background: #0f3460;
+    color: white;
+}
+
+.tabs button:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .nav-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginPage">
+    <h1>🏨 <span class="logo">Ravitec</span> <small>HMIS</small></h1>
+    <h2 style="color:#333; margin-bottom:20px;">🔐 Login</h2>
+    <div id="loginAlert"></div>
+    <input id="loginEmail" placeholder="Email" type="email">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button id="loginBtn">Login</button>
+    <button id="goRegister" class="secondary">Create Account</button>
+</div>
+
+<!-- REGISTER -->
+<div id="registerPage" class="hidden">
+    <h1>🏨 <span class="logo">Ravitec</span> <small>HMIS</small></h1>
+    <h2 style="color:#333; margin-bottom:20px;">📝 Register</h2>
+    <div id="registerAlert"></div>
+    <input id="rUser" placeholder="Username">
+    <input id="rEmail" placeholder="Email" type="email">
+    <input id="rPass" type="password" placeholder="Password (min 6 characters)">
+    <input id="rConfirm" type="password" placeholder="Confirm Password">
+    <button id="regBtn" class="success">Register</button>
+    <button id="backLogin" class="secondary">Back to Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+    <h1>🏨 <span class="logo">Ravitec</span> <small>HMIS</small></h1>
+    <p id="welcome" style="font-size:18px; color:#333;"></p>
+    <div id="stats" class="stats-grid"></div>
+    
+    <div class="nav-grid">
+        <button onclick="showPage('students')">👨‍🎓 Students</button>
+        <button onclick="showPage('rooms')">🚪 Rooms</button>
+        <button onclick="showPage('allocations')">📋 Allocations</button>
+        <button onclick="showPage('payments')">💰 Payments</button>
+        <button onclick="showPage('mess')">🍽️ Mess</button>
+        <button onclick="showPage('maintenance')">🔧 Maintenance</button>
+        <button onclick="showPage('complaints')">📢 Complaints</button>
+        <button onclick="showPage('notices')">📰 Notices</button>
+        <button onclick="showPage('blocks')">🏢 Blocks</button>
+        <button onclick="loadAPI()">🌐 API</button>
+    </div>
+    
+    <button id="logout" class="danger">🚪 Logout</button>
+</div>
+
+<!-- STUDENTS -->
+<div id="studentsPage" class="hidden">
+    <h2>👨‍🎓 Students</h2>
+    <div id="studentAlert"></div>
+    
+    <input id="sStudentId" placeholder="Student ID">
+    <input id="sName" placeholder="Full Name">
+    <input id="sEmail" placeholder="Email" type="email">
+    <input id="sPhone" placeholder="Phone">
+    <input id="sCourse" placeholder="Course">
+    <input id="sDepartment" placeholder="Department">
+    <select id="sGender">
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+    </select>
+    
+    <div class="btn-group">
+        <button id="saveStudent" class="success">💾 Save Student</button>
+        <button id="clearStudent" class="secondary">🗑️ Clear</button>
+    </div>
+    
+    <input id="searchStudent" placeholder="🔍 Search students...">
+    <button id="backDash2" class="secondary">⬅️ Back</button>
+    <div id="studentList"></div>
+</div>
+
+<!-- ROOMS -->
+<div id="roomsPage" class="hidden">
+    <h2>🚪 Rooms</h2>
+    <div id="roomAlert"></div>
+    
+    <select id="roomBlock">
+        <option value="">Select Block</option>
+    </select>
+    <input id="roomNumber" placeholder="Room Number">
+    <input id="roomFloor" placeholder="Floor">
+    <select id="roomType">
+        <option value="single">Single</option>
+        <option value="double">Double</option>
+        <option value="triple">Triple</option>
+        <option value="dormitory">Dormitory</option>
+    </select>
+    <input id="roomCapacity" placeholder="Capacity" type="number">
+    <input id="roomRent" placeholder="Rent Amount" type="number">
+    
+    <div class="btn-group">
+        <button id="saveRoom" class="success">💾 Save Room</button>
+        <button id="clearRoom" class="secondary">🗑️ Clear</button>
+    </div>
+    
+    <button id="backDash3" class="secondary">⬅️ Back</button>
+    <div id="roomList"></div>
+</div>
+
+<!-- ALLOCATIONS -->
+<div id="allocationsPage" class="hidden">
+    <h2>📋 Room Allocations</h2>
+    <div id="allocationAlert"></div>
+    
+    <select id="allocStudent">
+        <option value="">Select Student</option>
+    </select>
+    <select id="allocRoom">
+        <option value="">Select Room</option>
+    </select>
+    <select id="allocBlock">
+        <option value="">Select Block</option>
+    </select>
+    <input id="allocDate" type="date">
+    
+    <button id="allocateRoom" class="success">🏠 Allocate Room</button>
+    <button id="backDash4" class="secondary">⬅️ Back</button>
+    <div id="allocationList"></div>
+</div>
+
+<!-- PAYMENTS -->
+<div id="paymentsPage" class="hidden">
+    <h2>💰 Payments</h2>
+    <div id="paymentAlert"></div>
+    
+    <select id="payStudent">
+        <option value="">Select Student</option>
+    </select>
+    <input id="payAmount" placeholder="Amount" type="number">
+    <select id="payType">
+        <option value="room_rent">Room Rent</option>
+        <option value="mess_fee">Mess Fee</option>
+        <option value="caution_deposit">Caution Deposit</option>
+        <option value="electricity">Electricity</option>
+        <option value="other">Other</option>
+    </select>
+    <input id="payDueDate" type="date">
+    <select id="payMethod">
+        <option value="cash">Cash</option>
+        <option value="bank_transfer">Bank Transfer</option>
+        <option value="upi">UPI</option>
+        <option value="credit_card">Credit Card</option>
+        <option value="other">Other</option>
+    </select>
+    
+    <button id="recordPayment" class="success">💰 Record Payment</button>
+    <button id="backDash5" class="secondary">⬅️ Back</button>
+    <div id="paymentList"></div>
+</div>
+
+<!-- MESS -->
+<div id="messPage" class="hidden">
+    <h2>🍽️ Mess Management</h2>
+    <div id="messAlert"></div>
+    
+    <input id="mealDate" type="date">
+    <select id="mealType">
+        <option value="breakfast">Breakfast</option>
+        <option value="lunch">Lunch</option>
+        <option value="dinner">Dinner</option>
+        <option value="snacks">Snacks</option>
+    </select>
+    <input id="menuItem" placeholder="Menu Item">
+    <textarea id="mealDescription" placeholder="Description" rows="2"></textarea>
+    
+    <button id="addMeal" class="success">🍽️ Add Meal</button>
+    <button id="backDash6" class="secondary">⬅️ Back</button>
+    <div id="messList"></div>
+</div>
+
+<!-- MAINTENANCE -->
+<div id="maintenancePage" class="hidden">
+    <h2>🔧 Maintenance Requests</h2>
+    <div id="maintenanceAlert"></div>
+    
+    <select id="maintStudent">
+        <option value="">Select Student</option>
+    </select>
+    <select id="maintRoom">
+        <option value="">Select Room</option>
+    </select>
+    <select id="maintIssue">
+        <option value="plumbing">Plumbing</option>
+        <option value="electrical">Electrical</option>
+        <option value="furniture">Furniture</option>
+        <option value="ac">AC</option>
+        <option value="cleaning">Cleaning</option>
+        <option value="other">Other</option>
+    </select>
+    <textarea id="maintDescription" placeholder="Description" rows="3"></textarea>
+    <select id="maintPriority">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="urgent">Urgent</option>
+    </select>
+    
+    <button id="submitMaintenance" class="warning">🔧 Submit Request</button>
+    <button id="backDash7" class="secondary">⬅️ Back</button>
+    <div id="maintenanceList"></div>
+</div>
+
+<!-- COMPLAINTS -->
+<div id="complaintsPage" class="hidden">
+    <h2>📢 Complaints</h2>
+    <div id="complaintAlert"></div>
+    
+    <select id="compStudent">
+        <option value="">Select Student</option>
+    </select>
+    <select id="compType">
+        <option value="noise">Noise</option>
+        <option value="harassment">Harassment</option>
+        <option value="food_quality">Food Quality</option>
+        <option value="facilities">Facilities</option>
+        <option value="staff">Staff</option>
+        <option value="other">Other</option>
+    </select>
+    <textarea id="compDescription" placeholder="Description" rows="3"></textarea>
+    
+    <button id="submitComplaint" class="warning">📢 Submit Complaint</button>
+    <button id="backDash8" class="secondary">⬅️ Back</button>
+    <div id="complaintList"></div>
+</div>
+
+<!-- NOTICES -->
+<div id="noticesPage" class="hidden">
+    <h2>📰 Notices</h2>
+    <div id="noticeAlert"></div>
+    
+    <input id="noticeTitle" placeholder="Title">
+    <textarea id="noticeContent" placeholder="Content" rows="3"></textarea>
+    <select id="noticeAudience">
+        <option value="all">All</option>
+        <option value="students">Students</option>
+        <option value="staff">Staff</option>
+    </select>
+    <select id="noticePriority">
+        <option value="normal">Normal</option>
+        <option value="high">High</option>
+        <option value="urgent">Urgent</option>
+    </select>
+    <input id="noticeExpires" type="datetime-local">
+    
+    <button id="createNotice" class="success">📰 Create Notice</button>
+    <button id="backDash9" class="secondary">⬅️ Back</button>
+    <div id="noticeList"></div>
+</div>
+
+<!-- BLOCKS -->
+<div id="blocksPage" class="hidden">
+    <h2>🏢 Hostel Blocks</h2>
+    <div id="blockAlert"></div>
+    
+    <input id="blockName" placeholder="Block Name">
+    <input id="blockCode" placeholder="Block Code">
+    <input id="blockFloors" placeholder="Number of Floors" type="number">
+    <input id="blockWarden" placeholder="Warden Name">
+    <input id="blockWardenPhone" placeholder="Warden Phone">
+    
+    <div class="btn-group">
+        <button id="saveBlock" class="success">💾 Save Block</button>
+        <button id="clearBlock" class="secondary">🗑️ Clear</button>
+    </div>
+    
+    <button id="backDash10" class="secondary">⬅️ Back</button>
+    <div id="blockList"></div>
+</div>
+
+<!-- API -->
+<div id="apiPage" class="hidden">
+    <h2>🌐 External API</h2>
+    <button id="loadAPIBtn">📥 Load External Users</button>
+    <button id="backDash11" class="secondary">⬅️ Back</button>
+    <div id="apiList"></div>
+</div>
+
+</div>
+
+<script>
+// =============================================
+// API CONFIGURATION
+// =============================================
+const API_URL = 'http://localhost:5000/api';
+let authToken = null;
+let currentUser = null;
+
+// =============================================
+// API HELPERS
+// =============================================
+async function apiRequest(endpoint, options = {}) {
+    const url = `${API_URL}${endpoint}`;
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+
+    if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+    }
+
+    const config = {
+        ...options,
+        headers
+    };
+
+    try {
+        const response = await fetch(url, config);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+    }
+}
+
+// =============================================
+// NAVIGATION
+// =============================================
+const pages = {
+    login: loginPage,
+    register: registerPage,
+    dashboard: dashboard,
+    students: studentsPage,
+    rooms: roomsPage,
+    allocations: allocationsPage,
+    payments: paymentsPage,
+    mess: messPage,
+    maintenance: maintenancePage,
+    complaints: complaintsPage,
+    notices: noticesPage,
+    blocks: blocksPage,
+    api: apiPage
+};
+
+function showPage(page) {
+    Object.values(pages).forEach(p => p.classList.add('hidden'));
+    if (pages[page]) {
+        pages[page].classList.remove('hidden');
+    }
+}
+
+function showAlert(container, message, type = 'error') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    container.innerHTML = '';
+    container.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// =============================================
+// AUTHENTICATION
+// =============================================
+
+// Register
+regBtn.onclick = async () => {
+    const username = rUser.value.trim();
+    const email = rEmail.value.trim();
+    const password = rPass.value;
+    const confirm = rConfirm.value;
+
+    if (!username || !email || !password) {
+        return showAlert(registerAlert, 'Please fill all fields', 'error');
+    }
+
+    if (password !== confirm) {
+        return showAlert(registerAlert, 'Passwords do not match', 'error');
+    }
+
+    if (password.length < 6) {
+        return showAlert(registerAlert, 'Password must be at least 6 characters', 'error');
+    }
+
+    try {
+        regBtn.disabled = true;
+        regBtn.textContent = 'Registering...';
+
+        await apiRequest('/register', {
+            method: 'POST',
+            body: JSON.stringify({ username, email, password })
+        });
+
+        showAlert(registerAlert, 'Registration successful! Please login.', 'success');
+        
+        rUser.value = rEmail.value = rPass.value = rConfirm.value = '';
+        
+        setTimeout(() => {
+            showPage('login');
+        }, 1500);
+
+    } catch (error) {
+        showAlert(registerAlert, error.message, 'error');
+    } finally {
+        regBtn.disabled = false;
+        regBtn.textContent = 'Register';
+    }
+};
+
+// Login
+loginBtn.onclick = async () => {
+    const email = loginEmail.value.trim();
+    const password = loginPass.value;
+
+    if (!email || !password) {
+        return showAlert(loginAlert, 'Please enter email and password', 'error');
+    }
+
+    try {
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Logging in...';
+
+        const data = await apiRequest('/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+
+        authToken = data.token;
+        currentUser = data.user;
+        
+        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+
+        document.getElementById('welcome').textContent = `Welcome, ${currentUser.username}! 👋`;
+        await loadDashboardStats();
+        showPage('dashboard');
+        
+        loginEmail.value = loginPass.value = '';
+        loginAlert.innerHTML = '';
+
+    } catch (error) {
+        showAlert(loginAlert, error.message, 'error');
+    } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login';
+    }
+};
+
+// Logout
+document.getElementById('logout').onclick = () => {
+    authToken = null;
+    currentUser = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    showPage('login');
+    loginAlert.innerHTML = '';
+};
+
+// Check saved session
+function checkSession() {
+    const savedToken = localStorage.getItem('authToken');
+    const savedUser = localStorage.getItem('user');
+    
+    if (savedToken && savedUser) {
+        authToken = savedToken;
+        currentUser = JSON.parse(savedUser);
+        document.getElementById('welcome').textContent = `Welcome back, ${currentUser.username}! 👋`;
+        loadDashboardStats();
+        showPage('dashboard');
+        return true;
+    }
+    return false;
+}
+
+// =============================================
+// DASHBOARD STATS
+// =============================================
+
+async function loadDashboardStats() {
+    try {
+        const data = await apiRequest('/dashboard/stats');
+        const statsDiv = document.getElementById('stats');
+        statsDiv.innerHTML = `
+            <div class="stat-card">
+                <div class="number">${data.totalStudents || 0}</div>
+                <div class="label">👨‍🎓 Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">${data.activeAllocations || 0}</div>
+                <div class="label">🏠 Allocations</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">${data.availableRooms || 0}</div>
+                <div class="label">🚪 Available Rooms</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">${data.pendingMaintenance || 0}</div>
+                <div class="label">🔧 Maintenance</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">${data.pendingComplaints || 0}</div>
+                <div class="label">📢 Complaints</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">₹${data.todayPayments || 0}</div>
+                <div class="label">💰 Today's Payments</div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
+
+// =============================================
+// STUDENT OPERATIONS
+// =============================================
+
+async function loadStudents() {
+    try {
+        return await apiRequest('/students');
+    } catch (error) {
+        console.error('Error loading students:', error);
+        return [];
+    }
+}
+
+async function renderStudents() {
+    const searchQuery = searchStudent.value.trim();
+    let students = [];
+
+    try {
+        students = await loadStudents();
+        
+        if (searchQuery) {
+            students = students.filter(s => 
+                s.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                s.student_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                s.email.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        const list = document.getElementById('studentList');
+        
+        if (students.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No students found. Add your first student!
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = students.map(s => `
+            <div class="card">
+                <div class="title">${s.full_name}</div>
+                <div class="subtitle">ID: ${s.student_id} | ${s.email}</div>
+                <div class="subtitle">📚 ${s.course || 'N/A'} | ${s.department || 'N/A'}</div>
+                <div class="subtitle">📞 ${s.phone || 'N/A'}</div>
+                ${s.room_number ? `<div class="subtitle">🏠 Room: ${s.room_number} (${s.block_name || ''})</div>` : ''}
+                <div class="btn-group" style="margin-top:10px;">
+                    <button class="secondary" onclick="editStudent(${s.id})">✏️ Edit</button>
+                    <button class="danger" onclick="deleteStudent(${s.id})">🗑️ Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('studentList').innerHTML = 
+            `<div class="alert alert-error">Error loading students: ${error.message}</div>`;
+    }
+}
+
+let editStudentId = null;
+
+document.getElementById('saveStudent').onclick = async () => {
+    const student_id = sStudentId.value.trim();
+    const full_name = sName.value.trim();
+    const email = sEmail.value.trim();
+    const phone = sPhone.value.trim();
+    const course = sCourse.value.trim();
+    const department = sDepartment.value.trim();
+    const gender = sGender.value;
+
+    if (!student_id || !full_name || !email) {
+        return showAlert(studentAlert, 'Student ID, Name and Email are required', 'error');
+    }
+
+    try {
+        const saveBtn = document.getElementById('saveStudent');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        const studentData = { student_id, full_name, email, phone, course, department, gender };
+
+        if (editStudentId) {
+            await apiRequest(`/students/${editStudentId}`, {
+                method: 'PUT',
+                body: JSON.stringify(studentData)
+            });
+            showAlert(studentAlert, 'Student updated successfully!', 'success');
+        } else {
+            await apiRequest('/students', {
+                method: 'POST',
+                body: JSON.stringify(studentData)
+            });
+            showAlert(studentAlert, 'Student added successfully!', 'success');
+        }
+
+        clearStudentForm();
+        await renderStudents();
+        await loadDashboardStats();
+
+    } catch (error) {
+        showAlert(studentAlert, error.message, 'error');
+    } finally {
+        const saveBtn = document.getElementById('saveStudent');
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Save Student';
+    }
+};
+
+async function editStudent(id) {
+    try {
+        const students = await loadStudents();
+        const student = students.find(s => s.id === id);
+        
+        if (!student) {
+            throw new Error('Student not found');
+        }
+
+        sStudentId.value = student.student_id;
+        sName.value = student.full_name;
+        sEmail.value = student.email;
+        sPhone.value = student.phone || '';
+        sCourse.value = student.course || '';
+        sDepartment.value = student.department || '';
+        sGender.value = student.gender || '';
+        editStudentId = student.id;
+        
+    } catch (error) {
+        showAlert(studentAlert, error.message, 'error');
+    }
+}
+
+async function deleteStudent(id) {
+    if (!confirm('Are you sure you want to delete this student?')) return;
+
+    try {
+        await apiRequest(`/students/${id}`, {
+            method: 'DELETE'
+        });
+        
+        await renderStudents();
+        await loadDashboardStats();
+        showAlert(studentAlert, 'Student deleted successfully!', 'success');
+        
+    } catch (error) {
+        showAlert(studentAlert, error.message, 'error');
+    }
+}
+
+document.getElementById('clearStudent').onclick = clearStudentForm;
+
+function clearStudentForm() {
+    sStudentId.value = '';
+    sName.value = '';
+    sEmail.value = '';
+    sPhone.value = '';
+    sCourse.value = '';
+    sDepartment.value = '';
+    sGender.value = '';
+    editStudentId = null;
+    studentAlert.innerHTML = '';
+}
+
+document.getElementById('searchStudent').oninput = renderStudents;
+
+// =============================================
+// BLOCK OPERATIONS
+// =============================================
+
+async function loadBlocks() {
+    try {
+        return await apiRequest('/blocks');
+    } catch (error) {
+        console.error('Error loading blocks:', error);
+        return [];
+    }
+}
+
+async function renderBlocks() {
+    try {
+        const blocks = await loadBlocks();
+        const list = document.getElementById('blockList');
+        
+        // Populate block dropdowns
+        const blockSelects = ['roomBlock', 'allocBlock'];
+        blockSelects.forEach(id => {
+            const select = document.getElementById(id);
+            if (select) {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">Select Block</option>';
+                blocks.forEach(b => {
+                    const option = document.createElement('option');
+                    option.value = b.id;
+                    option.textContent = b.block_name;
+                    select.appendChild(option);
+                });
+                if (currentValue) select.value = currentValue;
+            }
+        });
+        
+        if (blocks.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No blocks created yet.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = blocks.map(b => `
+            <div class="card">
+                <div class="title">🏢 ${b.block_name}</div>
+                <div class="subtitle">Code: ${b.block_code || 'N/A'} | Floors: ${b.floors || 1}</div>
+                <div class="subtitle">👨‍💼 Warden: ${b.warden_name || 'Not assigned'} | 📞 ${b.warden_phone || 'N/A'}</div>
+                <div class="subtitle">🚪 Total Rooms: ${b.total_rooms || 0}</div>
+                <div class="btn-group" style="margin-top:10px;">
+                    <button class="secondary" onclick="editBlock(${b.id})">✏️ Edit</button>
+                    <button class="danger" onclick="deleteBlock(${b.id})">🗑️ Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('blockList').innerHTML = 
+            `<div class="alert alert-error">Error loading blocks: ${error.message}</div>`;
+    }
+}
+
+let editBlockId = null;
+
+document.getElementById('saveBlock').onclick = async () => {
+    const block_name = blockName.value.trim();
+    const block_code = blockCode.value.trim();
+    const floors = parseInt(blockFloors.value) || 1;
+    const warden_name = blockWarden.value.trim();
+    const warden_phone = blockWardenPhone.value.trim();
+
+    if (!block_name) {
+        return showAlert(blockAlert, 'Block name is required', 'error');
+    }
+
+    try {
+        const saveBtn = document.getElementById('saveBlock');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        const blockData = { block_name, block_code, floors, warden_name, warden_phone };
+
+        if (editBlockId) {
+            await apiRequest(`/blocks/${editBlockId}`, {
+                method: 'PUT',
+                body: JSON.stringify(blockData)
+            });
+            showAlert(blockAlert, 'Block updated successfully!', 'success');
+        } else {
+            await apiRequest('/blocks', {
+                method: 'POST',
+                body: JSON.stringify(blockData)
+            });
+            showAlert(blockAlert, 'Block created successfully!', 'success');
+        }
+
+        clearBlockForm();
+        await renderBlocks();
+        await loadDashboardStats();
+
+    } catch (error) {
+        showAlert(blockAlert, error.message, 'error');
+    } finally {
+        const saveBtn = document.getElementById('saveBlock');
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Save Block';
+    }
+};
+
+document.getElementById('clearBlock').onclick = clearBlockForm;
+
+function clearBlockForm() {
+    blockName.value = '';
+    blockCode.value = '';
+    blockFloors.value = '';
+    blockWarden.value = '';
+    blockWardenPhone.value = '';
+    editBlockId = null;
+    blockAlert.innerHTML = '';
+}
+
+// =============================================
+// ROOM OPERATIONS
+// =============================================
+
+async function loadRooms(blockId = null) {
+    try {
+        if (blockId) {
+            return await apiRequest(`/rooms/block/${blockId}`);
+        }
+        return [];
+    } catch (error) {
+        console.error('Error loading rooms:', error);
+        return [];
+    }
+}
+
+async function renderRooms() {
+    const blockId = roomBlock.value;
+    if (!blockId) {
+        document.getElementById('roomList').innerHTML = 
+            `<div class="card" style="text-align:center; color:#6c757d;">
+                Please select a block to view rooms.
+            </div>`;
+        return;
+    }
+
+    try {
+        const rooms = await loadRooms(blockId);
+        const list = document.getElementById('roomList');
+        
+        if (rooms.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No rooms in this block.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = rooms.map(r => `
+            <div class="card">
+                <div class="title">🚪 Room ${r.room_number}</div>
+                <div class="subtitle">Floor: ${r.floor_number || 1} | Type: ${r.room_type || 'N/A'}</div>
+                <div class="subtitle">👥 ${r.current_occupancy || 0}/${r.capacity || 0} occupants</div>
+                <div class="subtitle">💰 Rent: ₹${r.rent_amount || 0}</div>
+                <div class="subtitle">${r.has_ac ? '❄️ AC' : ''} ${r.has_attached_bathroom ? '🚿 Attached Bathroom' : ''}</div>
+                <div class="subtitle">Status: ${r.is_available ? '✅ Available' : '❌ Occupied'}</div>
+                <div class="btn-group" style="margin-top:10px;">
+                    <button class="secondary" onclick="editRoom(${r.id})">✏️ Edit</button>
+                    <button class="danger" onclick="deleteRoom(${r.id})">🗑️ Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+        // Populate room dropdown for allocations
+        const allocRoomSelect = document.getElementById('allocRoom');
+        if (allocRoomSelect) {
+            const currentValue = allocRoomSelect.value;
+            allocRoomSelect.innerHTML = '<option value="">Select Room</option>';
+            rooms.forEach(r => {
+                if (r.is_available || r.current_occupancy < r.capacity) {
+                    const option = document.createElement('option');
+                    option.value = r.id;
+                    option.textContent = `Room ${r.room_number} (${r.current_occupancy || 0}/${r.capacity || 0})`;
+                    allocRoomSelect.appendChild(option);
+                }
+            });
+            if (currentValue) allocRoomSelect.value = currentValue;
+        }
+
+    } catch (error) {
+        document.getElementById('roomList').innerHTML = 
+            `<div class="alert alert-error">Error loading rooms: ${error.message}</div>`;
+    }
+}
+
+document.getElementById('roomBlock').onchange = renderRooms;
+
+let editRoomId = null;
+
+document.getElementById('saveRoom').onclick = async () => {
+    const block_id = roomBlock.value;
+    const room_number = roomNumber.value.trim();
+    const floor_number = parseInt(roomFloor.value) || 1;
+    const room_type = roomType.value;
+    const capacity = parseInt(roomCapacity.value) || 2;
+    const rent_amount = parseFloat(roomRent.value) || 0;
+
+    if (!block_id || !room_number) {
+        return showAlert(roomAlert, 'Block and Room number are required', 'error');
+    }
+
+    try {
+        const saveBtn = document.getElementById('saveRoom');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        const roomData = { block_id, room_number, floor_number, room_type, capacity, rent_amount };
+
+        if (editRoomId) {
+            await apiRequest(`/rooms/${editRoomId}`, {
+                method: 'PUT',
+                body: JSON.stringify(roomData)
+            });
+            showAlert(roomAlert, 'Room updated successfully!', 'success');
+        } else {
+            await apiRequest('/rooms', {
+                method: 'POST',
+                body: JSON.stringify(roomData)
+            });
+            showAlert(roomAlert, 'Room created successfully!', 'success');
+        }
+
+        clearRoomForm();
+        await renderRooms();
+        await loadDashboardStats();
+
+    } catch (error) {
+        showAlert(roomAlert, error.message, 'error');
+    } finally {
+        const saveBtn = document.getElementById('saveRoom');
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Save Room';
+    }
+};
+
+document.getElementById('clearRoom').onclick = clearRoomForm;
+
+function clearRoomForm() {
+    roomNumber.value = '';
+    roomFloor.value = '';
+    roomType.value = 'double';
+    roomCapacity.value = '';
+    roomRent.value = '';
+    editRoomId = null;
+    roomAlert.innerHTML = '';
+}
+
+// =============================================
+// ALLOCATION OPERATIONS
+// =============================================
+
+async function loadAllocations() {
+    try {
+        return await apiRequest('/allocations/active');
+    } catch (error) {
+        console.error('Error loading allocations:', error);
+        return [];
+    }
+}
+
+async function renderAllocations() {
+    try {
+        const allocations = await loadAllocations();
+        const list = document.getElementById('allocationList');
+        
+        // Populate student dropdown
+        const students = await loadStudents();
+        const allocStudentSelect = document.getElementById('allocStudent');
+        const currentStudentValue = allocStudentSelect.value;
+        allocStudentSelect.innerHTML = '<option value="">Select Student</option>';
+        students.forEach(s => {
+            const option = document.createElement('option');
+            option.value = s.id;
+            option.textContent = `${s.student_id} - ${s.full_name}`;
+            allocStudentSelect.appendChild(option);
+        });
+        if (currentStudentValue) allocStudentSelect.value = currentStudentValue;
+        
+        if (allocations.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No active allocations.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = allocations.map(a => `
+            <div class="card">
+                <div class="title">${a.student_name}</div>
+                <div class="subtitle">ID: ${a.student_id}</div>
+                <div class="subtitle">🏠 ${a.block_name} - Room ${a.room_number}</div>
+                <div class="subtitle">📅 Allocated: ${a.allocated_date}</div>
+                <div class="subtitle">Status: ${a.status === 'active' ? '✅ Active' : '❌ Inactive'}</div>
+                <div class="btn-group" style="margin-top:10px;">
+                    <button class="danger" onclick="cancelAllocation(${a.id})">❌ Cancel</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('allocationList').innerHTML = 
+            `<div class="alert alert-error">Error loading allocations: ${error.message}</div>`;
+    }
+}
+
+document.getElementById('allocateRoom').onclick = async () => {
+    const student_id = allocStudent.value;
+    const room_id = allocRoom.value;
+    const block_id = allocBlock.value;
+    const allocated_date = allocDate.value || new Date().toISOString().split('T')[0];
+
+    if (!student_id || !room_id || !block_id) {
+        return showAlert(allocationAlert, 'Student, Room and Block are required', 'error');
+    }
+
+    try {
+        const btn = document.getElementById('allocateRoom');
+        btn.disabled = true;
+        btn.textContent = 'Allocating...';
+
+        await apiRequest('/allocations', {
+            method: 'POST',
+            body: JSON.stringify({ student_id, room_id, block_id, allocated_date })
+        });
+
+        showAlert(allocationAlert, 'Room allocated successfully!', 'success');
+        await renderAllocations();
+        await loadDashboardStats();
+
+    } catch (error) {
+        showAlert(allocationAlert, error.message, 'error');
+    } finally {
+        const btn = document.getElementById('allocateRoom');
+        btn.disabled = false;
+        btn.textContent = '🏠 Allocate Room';
+    }
+};
+
+async function cancelAllocation(id) {
+    if (!confirm('Cancel this room allocation?')) return;
+
+    try {
+        await apiRequest(`/allocations/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({ status: 'cancelled' })
+        });
+        
+        await renderAllocations();
+        await loadDashboardStats();
+        showAlert(allocationAlert, 'Allocation cancelled successfully!', 'success');
+        
+    } catch (error) {
+        showAlert(allocationAlert, error.message, 'error');
+    }
+}
+
+// =============================================
+// PAYMENT OPERATIONS
+// =============================================
+
+async function loadPayments() {
+    try {
+        return await apiRequest('/payments');
+    } catch (error) {
+        console.error('Error loading payments:', error);
+        return [];
+    }
+}
+
+async function renderPayments() {
+    try {
+        const payments = await loadPayments();
+        const list = document.getElementById('paymentList');
+        
+        // Populate student dropdown
+        const students = await loadStudents();
+        const payStudentSelect = document.getElementById('payStudent');
+        const currentValue = payStudentSelect.value;
+        payStudentSelect.innerHTML = '<option value="">Select Student</option>';
+        students.forEach(s => {
+            const option = document.createElement('option');
+            option.value = s.id;
+            option.textContent = `${s.student_id} - ${s.full_name}`;
+            payStudentSelect.appendChild(option);
+        });
+        if (currentValue) payStudentSelect.value = currentValue;
+        
+        if (payments.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No payments recorded.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = payments.slice(0, 20).map(p => `
+            <div class="card">
+                <div class="title">💰 ₹${p.amount}</div>
+                <div class="subtitle">${p.student_name} (${p.student_id})</div>
+                <div class="subtitle">Type: ${p.payment_type} | Method: ${p.payment_method}</div>
+                <div class="subtitle">📅 ${p.payment_date} | Receipt: ${p.receipt_number}</div>
+                <div class="subtitle">Status: ${p.status === 'paid' ? '✅ Paid' : '⏳ Pending'}</div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('paymentList').innerHTML = 
+            `<div class="alert alert-error">Error loading payments: ${error.message}</div>`;
+    }
+}
+
+document.getElementById('recordPayment').onclick = async () => {
+    const student_id = payStudent.value;
+    const amount = parseFloat(payAmount.value);
+    const payment_type = payType.value;
+    const due_date = payDueDate.value || null;
+    const payment_method = payMethod.value;
+
+    if (!student_id || !amount || amount <= 0) {
+        return showAlert(paymentAlert, 'Student and valid amount are required', 'error');
+    }
+
+    try {
+        const btn = document.getElementById('recordPayment');
+        btn.disabled = true;
+        btn.textContent = 'Recording...';
+
+        await apiRequest('/payments', {
+            method: 'POST',
+            body: JSON.stringify({ student_id, amount, payment_type, due_date, payment_method })
+        });
+
+        showAlert(paymentAlert, 'Payment recorded successfully!', 'success');
+        await renderPayments();
+        await loadDashboardStats();
+
+    } catch (error) {
+        showAlert(paymentAlert, error.message, 'error');
+    } finally {
+        const btn = document.getElementById('recordPayment');
+        btn.disabled = false;
+        btn.textContent = '💰 Record Payment';
+    }
+};
+
+// =============================================
+// MESS OPERATIONS
+// =============================================
+
+async function loadMeals(date = null) {
+    try {
+        if (date) {
+            return await apiRequest(`/mess/meals/date/${date}`);
+        }
+        return [];
+    } catch (error) {
+        console.error('Error loading meals:', error);
+        return [];
+    }
+}
+
+async function renderMeals() {
+    const date = mealDate.value || new Date().toISOString().split('T')[0];
+    
+    try {
+        const meals = await loadMeals(date);
+        const list = document.getElementById('messList');
+        
+        if (meals.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No meals scheduled for this date.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = meals.map(m => `
+            <div class="card">
+                <div class="title">🍽️ ${m.meal_type.toUpperCase()}</div>
+                <div class="subtitle">${m.menu_item || 'No menu item'}</div>
+                <div class="subtitle">${m.description || ''}</div>
+                <div class="subtitle">📅 ${m.meal_date}</div>
+                <div class="btn-group" style="margin-top:10px;">
+                    <button class="danger" onclick="deleteMeal(${m.id})">🗑️ Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('messList').innerHTML = 
+            `<div class="alert alert-error">Error loading meals: ${error.message}</div>`;
+    }
+}
+
+document.getElementById('mealDate').onchange = renderMeals;
+
+document.getElementById('addMeal').onclick = async () => {
+    const meal_date = mealDate.value || new Date().toISOString().split('T')[0];
+    const meal_type = mealType.value;
+    const menu_item = menuItem.value.trim();
+    const description = mealDescription.value.trim();
+
+    if (!meal_type) {
+        return showAlert(messAlert, 'Meal type is required', 'error');
+    }
+
+    try {
+        const btn = document.getElementById('addMeal');
+        btn.disabled = true;
+        btn.textContent = 'Adding...';
+
+        await apiRequest('/mess/meals', {
+            method: 'POST',
+            body: JSON.stringify({ meal_date, meal_type, menu_item, description })
+        });
+
+        showAlert(messAlert, 'Meal added successfully!', 'success');
+        await renderMeals();
+
+    } catch (error) {
+        showAlert(messAlert, error.message, 'error');
+    } finally {
+        const btn = document.getElementById('addMeal');
+        btn.disabled = false;
+        btn.textContent = '🍽️ Add Meal';
+    }
+};
+
+// =============================================
+// MAINTENANCE OPERATIONS
+// =============================================
+
+async function loadMaintenanceRequests() {
+    try {
+        return await apiRequest('/maintenance');
+    } catch (error) {
+        console.error('Error loading maintenance:', error);
+        return [];
+    }
+}
+
+async function renderMaintenance() {
+    try {
+        const requests = await loadMaintenanceRequests();
+        const list = document.getElementById('maintenanceList');
+        
+        // Populate student dropdown
+        const students = await loadStudents();
+        const maintStudentSelect = document.getElementById('maintStudent');
+        const currentValue = maintStudentSelect.value;
+        maintStudentSelect.innerHTML = '<option value="">Select Student</option>';
+        students.forEach(s => {
+            const option = document.createElement('option');
+            option.value = s.id;
+            option.textContent = `${s.student_id} - ${s.full_name}`;
+            maintStudentSelect.appendChild(option);
+        });
+        if (currentValue) maintStudentSelect.value = currentValue;
+        
+        if (requests.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No maintenance requests.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = requests.slice(0, 20).map(r => `
+            <div class="card">
+                <div class="title">🔧 ${r.issue_type.toUpperCase()}</div>
+                <div class="subtitle">${r.student_name} (${r.student_id})</div>
+                <div class="subtitle">${r.description}</div>
+                <div class="subtitle">Priority: ${r.priority} | Status: ${r.status}</div>
+                ${r.room_number ? `<div class="subtitle">🚪 Room: ${r.room_number}</div>` : ''}
+                <div class="subtitle">📅 ${r.created_at}</div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('maintenanceList').innerHTML = 
+            `<div class="alert alert-error">Error loading maintenance: ${error.message}</div>`;
+    }
+}
+
+document.getElementById('submitMaintenance').onclick = async () => {
+    const student_id = maintStudent.value;
+    const room_id = maintRoom.value || null;
+    const issue_type = maintIssue.value;
+    const description = maintDescription.value.trim();
+    const priority = maintPriority.value;
+
+    if (!student_id || !issue_type || !description) {
+        return showAlert(maintenanceAlert, 'Student, Issue type and Description are required', 'error');
+    }
+
+    try {
+        const btn = document.getElementById('submitMaintenance');
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+
+        await apiRequest('/maintenance', {
+            method: 'POST',
+            body: JSON.stringify({ student_id, room_id, issue_type, description, priority })
+        });
+
+        showAlert(maintenanceAlert, 'Maintenance request submitted!', 'success');
+        await renderMaintenance();
+
+    } catch (error) {
+        showAlert(maintenanceAlert, error.message, 'error');
+    } finally {
+        const btn = document.getElementById('submitMaintenance');
+        btn.disabled = false;
+        btn.textContent = '🔧 Submit Request';
+    }
+};
+
+// =============================================
+// COMPLAINT OPERATIONS
+// =============================================
+
+async function loadComplaints() {
+    try {
+        return await apiRequest('/complaints');
+    } catch (error) {
+        console.error('Error loading complaints:', error);
+        return [];
+    }
+}
+
+async function renderComplaints() {
+    try {
+        const complaints = await loadComplaints();
+        const list = document.getElementById('complaintList');
+        
+        // Populate student dropdown
+        const students = await loadStudents();
+        const compStudentSelect = document.getElementById('compStudent');
+        const currentValue = compStudentSelect.value;
+        compStudentSelect.innerHTML = '<option value="">Select Student</option>';
+        students.forEach(s => {
+            const option = document.createElement('option');
+            option.value = s.id;
+            option.textContent = `${s.student_id} - ${s.full_name}`;
+            compStudentSelect.appendChild(option);
+        });
+        if (currentValue) compStudentSelect.value = currentValue;
+        
+        if (complaints.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No complaints.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = complaints.slice(0, 20).map(c => `
+            <div class="card">
+                <div class="title">📢 ${c.complaint_type.toUpperCase()}</div>
+                <div class="subtitle">${c.student_name} (${c.student_id})</div>
+                <div class="subtitle">${c.description}</div>
+                <div class="subtitle">Status: ${c.status}${c.resolution ? ` | Resolution: ${c.resolution}` : ''}</div>
+                <div class="subtitle">📅 ${c.created_at}</div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('complaintList').innerHTML = 
+            `<div class="alert alert-error">Error loading complaints: ${error.message}</div>`;
+    }
+}
+
+document.getElementById('submitComplaint').onclick = async () => {
+    const student_id = compStudent.value;
+    const complaint_type = compType.value;
+    const description = compDescription.value.trim();
+
+    if (!student_id || !complaint_type || !description) {
+        return showAlert(complaintAlert, 'Student, Complaint type and Description are required', 'error');
+    }
+
+    try {
+        const btn = document.getElementById('submitComplaint');
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+
+        await apiRequest('/complaints', {
+            method: 'POST',
+            body: JSON.stringify({ student_id, complaint_type, description })
+        });
+
+        showAlert(complaintAlert, 'Complaint submitted successfully!', 'success');
+        await renderComplaints();
+
+    } catch (error) {
+        showAlert(complaintAlert, error.message, 'error');
+    } finally {
+        const btn = document.getElementById('submitComplaint');
+        btn.disabled = false;
+        btn.textContent = '📢 Submit Complaint';
+    }
+};
+
+// =============================================
+// NOTICE OPERATIONS
+// =============================================
+
+async function loadNotices() {
+    try {
+        return await apiRequest('/notices');
+    } catch (error) {
+        console.error('Error loading notices:', error);
+        return [];
+    }
+}
+
+async function renderNotices() {
+    try {
+        const notices = await loadNotices();
+        const list = document.getElementById('noticeList');
+        
+        if (notices.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#6c757d;">
+                No notices.
+            </div>`;
+            return;
+        }
+
+        list.innerHTML = notices.map(n => `
+            <div class="card">
+                <div class="title">📰 ${n.title}</div>
+                <div class="subtitle">${n.content}</div>
+                <div class="subtitle">Priority: ${n.priority} | Audience: ${n.target_audience}</div>
+                <div class="subtitle">📅 ${n.created_at}${n.expires_at ? ` | Expires: ${n.expires_at}` : ''}</div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        document.getElementById('noticeList').innerHTML = 
+            `<div class="alert alert-error">Error loading notices: ${error.message}</div>`;
+    }
+}
+
+document.getElementById('createNotice').onclick = async () => {
+    const title = noticeTitle.value.trim();
+    const content = noticeContent.value.trim();
+    const target_audience = noticeAudience.value;
+    const priority = noticePriority.value;
+    const expires_at = noticeExpires.value || null;
+
+    if (!title || !content) {
+        return showAlert(noticeAlert, 'Title and Content are required', 'error');
+    }
+
+    try {
+        const btn = document.getElementById('createNotice');
+        btn.disabled = true;
+        btn.textContent = 'Creating...';
+
+        await apiRequest('/notices', {
+            method: 'POST',
+            body: JSON.stringify({ title, content, target_audience, priority, expires_at })
+        });
+
+        showAlert(noticeAlert, 'Notice created successfully!', 'success');
+        await renderNotices();
+
+    } catch (error) {
+        showAlert(noticeAlert, error.message, 'error');
+    } finally {
+        const btn = document.getElementById('createNotice');
+        btn.disabled = false;
+        btn.textContent = '📰 Create Notice';
+    }
+};
+
+// =============================================
+// API FETCH
+// =============================================
+
+async function loadAPI() {
+    showPage('api');
+    const apiList = document.getElementById('apiList');
+    
+    try {
+        const btn = document.getElementById('loadAPIBtn');
+        btn.disabled = true;
+        btn.textContent = 'Loading...';
+        apiList.innerHTML = '<div class="card" style="text-align:center;">Loading external users...</div>';
+
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        const data = await response.json();
+
+        apiList.innerHTML = data.map(u => `
+            <div class="card">
+                <div class="title">${u.name}</div>
+                <div class="subtitle">📧 ${u.email}</div>
+                <div class="subtitle">🏢 ${u.company?.name || 'N/A'}</div>
+                <div class="subtitle">🌐 ${u.website || 'N/A'}</div>
+                <div class="subtitle">📞 ${u.phone || 'N/A'}</div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        apiList.innerHTML = `<div class="alert alert-error">Error: ${error.message}</div>`;
+    } finally {
+        const btn = document.getElementById('loadAPIBtn');
+        btn.disabled = false;
+        btn.textContent = '📥 Load External Users';
+    }
+}
+
+document.getElementById('loadAPIBtn').onclick = loadAPI;
+
+// =============================================
+// NAVIGATION EVENTS
+// =============================================
+
+document.getElementById('goRegister').onclick = () => {
+    showPage('register');
+    registerAlert.innerHTML = '';
+};
+
+document.getElementById('backLogin').onclick = () => {
+    showPage('login');
+    loginAlert.innerHTML = '';
+};
+
+// Back buttons
+const backButtons = [
+    'backDash2', 'backDash3', 'backDash4', 'backDash5', 
+    'backDash6', 'backDash7', 'backDash8', 'backDash9', 
+    'backDash10', 'backDash11'
+];
+
+backButtons.forEach(id => {
+    document.getElementById(id).onclick = () => {
+        showPage('dashboard');
+    };
+});
+
+// =============================================
+// INITIALIZATION
+// =============================================
+
+// Initialize date inputs
+if (mealDate) mealDate.value = new Date().toISOString().split('T')[0];
+if (allocDate) allocDate.value = new Date().toISOString().split('T')[0];
+
+// Check for saved session
+if (!checkSession()) {
+    showPage('login');
+}
+
+// Load initial data
+document.addEventListener('DOMContentLoaded', () => {
+    renderStudents();
+    renderBlocks();
+    renderRooms();
+    renderAllocations();
+    renderPayments();
+    renderMeals();
+    renderMaintenance();
+    renderComplaints();
+    renderNotices();
+});
+
+// Enter key support
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        if (!loginPage.classList.contains('hidden')) {
+            loginBtn.click();
+        } else if (!registerPage.classList.contains('hidden')) {
+            regBtn.click();
+        }
+    }
+});
+
+console.log('🏨 Ravitec HMIS v1.0');
+console.log('📡 API URL:', API_URL);
+console.log('👤 Current User:', currentUser);
+</script>
+</body>
+</html>
